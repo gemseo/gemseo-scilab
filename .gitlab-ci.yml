@@ -1,5 +1,5 @@
 default:
-  image: registry.gitlab.com/gemseo/dev/gemseo/multi-python
+  image: registry.gitlab.com/gemseo/dev/gemseo-scilab/multi-python-scilab
 
 # Stages executed sequentially until a job fails.
 stages:
@@ -10,25 +10,6 @@ variables:
   TEST_ALL_ENVS:
     value: "false"
     description: "Whether to run the tox tests for all python versions and all platforms."
-  TEST_ANACONDA_ENV_FILE:
-    value: "false"
-    description: "Whether to run the tox tests for the anaconda env file."
-
-# Jobs are defined as a hierarchy from the most common settings to the specific ones.
-# TODO: make the hierarchy more readable
-# .base
-# .linux
-# .windows
-# .additional-tests
-#     style
-#     pylint
-#     .tests
-#         .tests-linux
-#             py27,py38
-#             py36,py37,py39
-#         .tests-windows
-#             py27-win,py38-win
-#             py36-win,py37-win,py39-win
 
 # Base job template.
 .base:
@@ -36,7 +17,6 @@ variables:
   dependencies: []
 
   script:
-    # Run a tox env named after a job name.
     - tox -e $TOX_ENV_NAME
 
 # Specific settings for linux jobs.
@@ -152,63 +132,17 @@ style:
   parallel:
     matrix:
       - TOX_ENV_NAME:
-        - py27
-        - py39
-
-base-tests-linux:
-  extends:
-    - .base-tests
-    - .tests-linux
-
-base-tests-windows:
-  extends:
-    - .base-tests
-    - .tests-windows
-
-# Define jobs for minor python env with this additional parent.
-.additional-tests:
-  rules:
-    # For selecting from gitlab UI
-    - if: '$TEST_ALL_ENVS == "true"'
-    # Run for commits on the master branch
-    - if: '$CI_COMMIT_BRANCH == "master"'
-  parallel:
-    matrix:
-      - TOX_ENV_NAME:
         - py36
         - py37
         - py38
+        - py39
 
-additional-tests-linux:
+linux:
   extends:
-    - .additional-tests
+    - .base-tests
     - .tests-linux
 
-additional-tests-windows:
+windows:
   extends:
-    - .additional-tests
+    - .base-tests
     - .tests-windows
-
-# Jobs for testing anaconda env files.
-.anaconda-env-file:
-  rules:
-    # For selecting from gitlab UI
-    - if: '$TEST_ANACONDA_ENV_FILE == "true"'
-    # Run for commits on the master branch
-    - if: '$CI_COMMIT_BRANCH == "master"'
-  variables:
-    TOX_ENV_NAME: anaconda-env-file
-
-anaconda-env-file-linux:
-  stage: tests
-  extends:
-    - .base
-    - .linux
-    - .anaconda-env-file
-
-anaconda-env-file-windows:
-  stage: tests
-  extends:
-    - .base
-    - .windows
-    - .anaconda-env-file

@@ -26,10 +26,10 @@ repos:
     - id: rst-directive-colons
     - id: rst-inline-touching-normal
 
-- repo: https://github.com/timothycrosley/isort
-  rev: 5.9.3
+- repo: https://github.com/asottile/reorder_python_imports
+  rev: v2.6.0
   hooks:
-  - id: isort
+  - id: reorder-python-imports
 
 - repo: https://github.com/myint/docformatter
   rev: v1.4
@@ -66,3 +66,40 @@ repos:
   hooks:
     - id: commitizen
       stages: [commit-msg]
+
+- repo: https://github.com/Lucas-C/pre-commit-hooks
+  rev: v1.1.10
+  hooks:
+    - id: insert-license
+      name: insert LGPL license
+      exclude: ^(tests/third_party/genson_tests|doc_src)
+      files: \.py$
+      args:
+        - --license-filepath
+        - LICENSES/headers/LGPL-3.0.txt
+    - id: insert-license
+      name: insert BSD license
+      files: ^doc_src/(examples|tutorials).*\.py$
+      args:
+        - --license-filepath
+        - LICENSES/headers/BSD-0-Clause.txt
+    - id: insert-license
+      name: insert CC BY-SA license
+      files: (\.rst|\.rst\.txt)$
+      args:
+        - --license-filepath
+        - LICENSES/headers/CC-BY-SA-4.0.txt
+        - --comment-style
+        - ..|   |
+
+- repo: local
+  hooks:
+    - id: extract_req_in_from_setup_cfg
+      name: extract test requirements
+      language: python
+      pass_filenames: false
+      files: ^setup\.cfg$
+      entry: >
+        ./tools/extract_req_in_from_setup_cfg.py
+        --extras-require-key test
+        requirements/test.in
