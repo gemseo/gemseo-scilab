@@ -6,11 +6,6 @@ stages:
   - check
   - tests
 
-variables:
-  TEST_ALL_ENVS:
-    value: "false"
-    description: "Whether to run the tox tests for all python versions and all platforms."
-
 # Base job template.
 .base:
   interruptible: true
@@ -87,7 +82,7 @@ style:
   variables:
     # Use coverage and generate reports,
     # via env variables because passing extra command line options to tox within the current file is cumbersome.
-    PYTEST_ADDOPTS: --cov --cov-report=xml --junitxml=report.xml
+    PYTEST_ADDOPTS: --cov --cov-report=term --cov-report=xml --junitxml=report.xml
     TOX_TESTENV_PASSENV: PYTEST_ADDOPTS
   # cache:
   #   - !reference [.base, cache]
