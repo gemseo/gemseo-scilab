@@ -9,11 +9,6 @@
 GEMSEO-Scilab is a GEMSEO plugin for interfacing scilab functions to GEMSEO.
 It creates GEMSEO MDODisciplines from any scilab source code.
 
-Documentation
--------------
-
-Not yet available.
-
 Bugs/Questions
 --------------
 
@@ -43,3 +38,4 @@ Contributors
 
 - François Gallard
 - Antoine Dechaume
+- Gilberto Ruiz Jiménez

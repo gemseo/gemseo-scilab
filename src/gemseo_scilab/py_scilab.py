@@ -27,7 +27,7 @@ from scilab2py import scilab
 LOGGER = logging.getLogger(__name__)
 
 
-class ScilabFunction(object):
+class ScilabFunction:
     """A scilab function."""
 
     def __init__(
