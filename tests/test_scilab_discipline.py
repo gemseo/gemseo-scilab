@@ -120,7 +120,7 @@ def test_func_fail_exec(caplog):
         assert caplog.text == f"Discipline: {fname} execution failed"
 
 
-def test_cast_array():
-    """Test the discipline execution if an input is not given as an `ndarray`."""
-    out = exec_disc("dummy_func1", {"b": [1.0]})
-    assert out["a"] == array([3.0])
+def test_matrix_output():
+    """Test the discipline execution if an output is given as an `ndarray`."""
+    out = exec_disc("dummy_func5", {"b": [1.0]})
+    assert out["a"].all() == array([3.0, 3.0]).all()

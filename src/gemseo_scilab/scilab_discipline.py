@@ -154,6 +154,10 @@ class ScilabDataProcessor(DataProcessor):
         processed_data = dict(local_data)
         for data_name in self._scilab_function.outs:
             val = processed_data[data_name]
-            if not isinstance(val, ndarray):
+
+            if isinstance(val, ndarray):
+                processed_data[data_name] = val.flatten()
+            else:
                 processed_data[data_name] = array([val])
+
         return processed_data
