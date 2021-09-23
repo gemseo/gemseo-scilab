@@ -107,7 +107,7 @@ class ScilabDiscipline(MDODiscipline):
         Returns:
             The attributes names.
         """
-        attrs = super(ScilabDiscipline, self).get_attributes_to_serialize()
+        attrs = super().get_attributes_to_serialize()
         attrs.append("_scilab_function")
         return attrs
 
