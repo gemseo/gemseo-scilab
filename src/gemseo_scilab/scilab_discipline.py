@@ -14,14 +14,17 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 """Scilab discipline."""
 import logging
+from typing import Dict
+from typing import List
 from typing import Mapping
 from typing import Union
 
-import numpy as np
 from gemseo.core.data_processor import DataProcessor
 from gemseo.core.discipline import MDODiscipline
 from gemseo_scilab.py_scilab import ScilabFunction
 from gemseo_scilab.py_scilab import ScilabPackage
+from numpy import array
+from numpy import ndarray
 
 LOGGER = logging.getLogger(__name__)
 
@@ -29,12 +32,21 @@ LOGGER = logging.getLogger(__name__)
 class ScilabDiscipline(MDODiscipline):
     """Base wrapper for OCCAM problem discipline wrappers and SimpleGrammar."""
 
-    def __init__(self, function_name: str, script_dir_path: str) -> None:
+    def __init__(
+        self,
+        function_name: str,
+        script_dir_path: str,
+    ) -> None:
         """Constructor.
 
-        @param function_name : the name of the scilab function to
-                                generate the discipline from
-        @param script_dir_path : directory to scan for .sci files
+        Args:
+            function_name: The name of the scilab function to
+                generate the discipline from.
+            script_dir_path: The path to the directory to scan for `.sci` files.
+
+        Raises:
+            ValueError: If the function is not in any of the files of
+                the `script_dir_path`.
         """
         super().__init__(
             name=function_name,
@@ -45,27 +57,31 @@ class ScilabDiscipline(MDODiscipline):
 
         if function_name not in self.__scilab_package.functions:
             raise ValueError(
-                f"The function named {function_name} "
+                f"The function named {function_name}"
                 f" is not in script_dir {script_dir_path}"
             )
 
-        self.__scilab_function = self.__scilab_package.functions[function_name]
+        self._scilab_function = self.__scilab_package.functions[function_name]
 
         self.input_grammar.initialize_from_base_dict(self.__base_input_data)
         self.output_grammar.initialize_from_base_dict(self.__base_output_data)
-        self.data_processor = ScilabDataProcessor(self.__scilab_function)
+        self.data_processor = ScilabDataProcessor(self._scilab_function)
 
     def _run(self) -> None:
-        """Run the discipline."""
+        """Run the discipline.
+
+        Raises:
+            BaseException: If the discipline execution fails.
+        """
         input_data = self.get_input_data()
 
         try:
-            output_data = self.__scilab_function(**input_data)
+            output_data = self._scilab_function(**input_data)
         except BaseException:
             LOGGER.error("Discipline: %s execution failed", self.name)
             raise
 
-        out_names = self.__scilab_function.outs
+        out_names = self._scilab_function.outs
 
         if len(out_names) == 1:
             self.store_local_data(**{out_names[0]: output_data})
@@ -74,45 +90,70 @@ class ScilabDiscipline(MDODiscipline):
                 self.store_local_data(**{out_n: out_v})
 
     @property
-    def __base_input_data(self):
+    def __base_input_data(self) -> Dict[str, Union[float, ndarray]]:
+        """The data to initialize the inputs."""
         def_data = [0.1]
-        return {k: def_data for k in self.__scilab_function.args}
+        return {k: def_data for k in self._scilab_function.args}
 
     @property
-    def __base_output_data(self):
+    def __base_output_data(self) -> Dict[str, Union[float, ndarray]]:
+        """The data to initialize the outputs."""
         def_data = [0.1]
-        return {k: def_data for k in self.__scilab_function.outs}
+        return {k: def_data for k in self._scilab_function.outs}
+
+    def get_attributes_to_serialize(self) -> List[str]:
+        """Define the attributes to be serialized.
+
+        Returns:
+            The attributes names.
+        """
+        attrs = super(ScilabDiscipline, self).get_attributes_to_serialize()
+        attrs.append("_scilab_function")
+        return attrs
 
 
 class ScilabDataProcessor(DataProcessor):
     """A scilab function data processor."""
 
     def __init__(self, scilab_function: ScilabFunction) -> None:
-        """# noqa: D205, D212, D415
+        """Constructor.
+
         Args:
             scilab_function: The scilab function.
         """
         super().__init__()
-        self.__scilab_function = scilab_function
+        self._scilab_function = scilab_function
 
-    def pre_process_data(self, input_data: np.ndarray):
-        """Convert GEMSEO input data for scilab.
+    def pre_process_data(
+        self, input_data: Mapping[str, ndarray]
+    ) -> Dict[str, Union[float, ndarray]]:
+        """Convert the input from GEMSEO to scilab.
 
-        @param input_data : the input data dict
+        Args:
+            input_data: The input data.
+
+        Returns:
+            The data to be passed to scilab.
         """
         processed_data = input_data.copy()
-        for data_name in self.__scilab_function.args:
+        for data_name in self._scilab_function.args:
             processed_data[data_name] = processed_data[data_name]
         return processed_data
 
-    def post_process_data(self, local_data: Mapping[str, Union[float, np.ndarray]]):
-        """Convert output data from scilab for GEMSEO.
+    def post_process_data(
+        self, local_data: Mapping[str, Union[float, ndarray]]
+    ) -> Dict[str, ndarray]:
+        """Convert the output data from scilab to GEMSEO.
 
-        @param local_data : the local data of self
+        Args:
+            local_data : The data obtained after executing scilab.
+
+        Returns:
+            The processed data to be given to GEMSEO.
         """
         processed_data = dict(local_data)
-        for data_name in self.__scilab_function.outs:
+        for data_name in self._scilab_function.outs:
             val = processed_data[data_name]
-            if not isinstance(val, np.ndarray):
-                processed_data[data_name] = np.array([val])
+            if not isinstance(val, ndarray):
+                processed_data[data_name] = array([val])
         return processed_data

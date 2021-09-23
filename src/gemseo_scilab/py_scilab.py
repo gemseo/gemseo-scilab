@@ -16,80 +16,118 @@
 import logging
 import re
 from glob import glob
-from os.path import exists
-from os.path import join
+from pathlib import Path
+from typing import Dict
+from typing import Sequence
+from typing import Union
 
+from numpy import ndarray
 from scilab2py import scilab
 
 LOGGER = logging.getLogger(__name__)
 
 
-class ScilabFunction:
+class ScilabFunction(object):
     """A scilab function."""
 
-    def __init__(self, f_pointer, name, args, outs) -> None:
-        """# noqa: D205, D212, D415
+    def __init__(
+        self,
+        fun_def: str,
+        name: str,
+        args: Sequence[str],
+        outs: Sequence[str],
+    ) -> None:
+        """Constructor.
+
         Args:
-            f_pointer:
-            name:
-            args:
-            outs:
+            fun_def: The definition of the function.
+            name: The name of the function.
+            args: The arguments of the function.
+            outs: The outputs of the function.
         """
-        self.f_pointer = f_pointer
+        self._f_pointer = None
+        self._fun_def = fun_def
         self.name = name
         self.args = args
         self.outs = outs
 
-    def __call__(self, *args, **kwargs):
+        self.__init_from_def()
+
+    def __call__(self, *args, **kwargs) -> Dict[str, Union[float, ndarray]]:
         """Call the scilab function."""
-        return self.f_pointer(*args, **kwargs)
+        return self._f_pointer(*args, **kwargs)
+
+    def __init_from_def(self) -> None:
+        """Initialize the function from its definition."""
+        exec(self._fun_def)
+        self._f_pointer = locals()[self.name]
+
+    def __getstate__(self):
+        out_dict = self.__dict__.copy()
+        del out_dict["_f_pointer"]
+        return out_dict
+
+    def __setstate__(self, state):
+        self.__dict__.update(state)
+        self._f_pointer = None
+        self.__init_from_def()
 
 
 class ScilabPackage:
     """Interface to a scilab package.
 
-    Scilab python interface Scans the sci files in a directory and generates python
+    Scilab python interface scans the sci files in a directory and generates python
     functions from them.
     """
 
-    RE_OUTS = re.compile(r"\[(.*?)]")
-    RE_FUNC = re.compile(r"=(.*?)\(")
-    RE_ARGS = re.compile(r"\((.*?)\)")
+    RE_OUTS = re.compile(r"\[([^$].*?)]")
+    RE_FUNC = re.compile(r"=([^$].*?)\(")
+    RE_ARGS = re.compile(r"\(([^$].*?)\)")
 
     def __init__(self, script_dir_path: str) -> None:
-        """# noqa: D205, D212, D415
+        """Constructor.
+
         Args:
             script_dir_path : The path to the directory to scan for .sci files.
+
+        Raises:
+            FileNotFoundError: If the `script_dir_path` does not exist.
         """
-        if not exists(script_dir_path):
+        if not Path(script_dir_path).exists():
             raise FileNotFoundError(
                 f"Script directory for Scilab sources: {script_dir_path}"
-                " does not exists."
+                " does not exist."
             )
 
         # scilab.timeout = 10
         LOGGER.info("Use scilab script directory: %s", script_dir_path)
 
         self.__script_dir_path = script_dir_path
-        scilab.getd(script_dir_path)
+        scilab.getd(str(script_dir_path))
         self.functions = {}
         self.__scan_funcs()
 
     def __scan_onef(self, line: str) -> None:
-        """Scans a function in a sci file to parse arguments, outputs and name.
+        """Scan a function in a sci file to parse its arguments, outputs and name.
 
-        @param line : the string containing the function
+        Args:
+            line: The line from the sci file to scan.
+
+        Raises:
+            ValueError: If no function is found in `line`.
+                If the function has no outputs. If the function has no arguments.
         """
+        line = line.replace(" ", "")
         match_groups = self.RE_FUNC.search(line)
         if match_groups is None:
-            raise Exception(f"No function name found in {line}")
+            raise ValueError(f"No function name found in {line}")
 
         fname = match_groups.group(0).strip()[1:-1].strip()
         LOGGER.debug("Detected function: %s", fname)
 
         match_groups = self.RE_OUTS.search(line)
         if match_groups is None:
-            raise Exception(f"Function {fname} has no outputs.")
+            raise ValueError(f"Function {fname} has no outputs.")
 
         argstr = match_groups.group(0).strip()
         argstr = argstr.replace("[", "").replace("]", "")
@@ -100,7 +138,7 @@ class ScilabPackage:
 
         match_groups = self.RE_ARGS.search(line)
         if match_groups is None:
-            raise Exception("Function has no arguments.")
+            raise ValueError(f"Function {fname} has no arguments.")
 
         argstr = match_groups.group(0).strip()[1:-1].strip()
         args = argstr.split(",")
@@ -120,16 +158,15 @@ def {fname}({args_form}):
     {outs_form} = scilab.{fname}({args_form})
     return {outs_form}
 """
-
-        exec(fun_def)
-
-        wrapped_func = locals()[fname]
-        setattr(self, fname, wrapped_func)
-        self.functions[fname] = ScilabFunction(wrapped_func, fname, fargs, fouts)
+        self.functions[fname] = ScilabFunction(fun_def, fname, fargs, fouts)
 
     def __scan_funcs(self) -> None:
-        """Scans all functions in the directory."""
-        for script_f in glob(join(self.__script_dir_path, "*.sci")):
+        """Scan all functions in the directory.
+
+        Raises:
+            ValueError: If an interface cannot be generated for a function.
+        """
+        for script_f in glob(str(Path(self.__script_dir_path) / "*.sci")):
             LOGGER.info("Found script file: %s", script_f)
 
             with open(script_f) as script:
@@ -139,12 +176,12 @@ def {fname}({args_form}):
 
                     try:
                         self.__scan_onef(line)
-                    except BaseException:
+                    except ValueError:
                         LOGGER.error("Cannot generate interface for function %s", line)
                         raise
 
     def __str__(self) -> str:
         sout = "Scilab python interface\nAvailable functions:\n"
         for function in self.functions.values():
-            sout += function.func.__doc__
+            sout += function._f_pointer.__doc__
         return sout
