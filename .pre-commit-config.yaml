@@ -78,7 +78,7 @@ repos:
   hooks:
     - id: insert-license
       name: insert LGPL license
-      exclude: ^(tests/third_party/genson_tests|doc_src)
+      exclude: ^doc_src
       files: \.py$
       args:
         - --license-filepath
