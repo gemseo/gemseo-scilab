@@ -13,13 +13,13 @@
 # along with this program; if not, write to the Free Software Foundation,
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 """Scilab wrapper."""
+from __future__ import annotations
+
 import logging
 import re
 from glob import glob
 from pathlib import Path
-from typing import Dict
 from typing import Sequence
-from typing import Union
 
 from numpy import ndarray
 from scilab2py import scilab
@@ -53,7 +53,7 @@ class ScilabFunction:
 
         self.__init_from_def()
 
-    def __call__(self, *args, **kwargs) -> Dict[str, Union[float, ndarray]]:
+    def __call__(self, *args, **kwargs) -> dict[str, float | ndarray]:
         """Call the scilab function."""
         return self._f_pointer(*args, **kwargs)
 
