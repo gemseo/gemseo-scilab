@@ -13,11 +13,10 @@
 # along with this program; if not, write to the Free Software Foundation,
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 """Scilab discipline."""
+from __future__ import annotations
+
 import logging
-from typing import Dict
-from typing import List
 from typing import Mapping
-from typing import Union
 
 from gemseo.core.data_processor import DataProcessor
 from gemseo.core.discipline import MDODiscipline
@@ -90,18 +89,18 @@ class ScilabDiscipline(MDODiscipline):
                 self.store_local_data(**{out_n: out_v})
 
     @property
-    def __base_input_data(self) -> Dict[str, Union[float, ndarray]]:
+    def __base_input_data(self) -> dict[str, float | ndarray]:
         """The data to initialize the inputs."""
         def_data = [0.1]
         return {k: def_data for k in self._scilab_function.args}
 
     @property
-    def __base_output_data(self) -> Dict[str, Union[float, ndarray]]:
+    def __base_output_data(self) -> dict[str, float | ndarray]:
         """The data to initialize the outputs."""
         def_data = [0.1]
         return {k: def_data for k in self._scilab_function.outs}
 
-    def get_attributes_to_serialize(self) -> List[str]:
+    def get_attributes_to_serialize(self) -> list[str]:
         """Define the attributes to be serialized.
 
         Returns:
@@ -126,7 +125,7 @@ class ScilabDataProcessor(DataProcessor):
 
     def pre_process_data(
         self, input_data: Mapping[str, ndarray]
-    ) -> Dict[str, Union[float, ndarray]]:
+    ) -> dict[str, float | ndarray]:
         """Convert the input from GEMSEO to scilab.
 
         Args:
@@ -141,8 +140,8 @@ class ScilabDataProcessor(DataProcessor):
         return processed_data
 
     def post_process_data(
-        self, local_data: Mapping[str, Union[float, ndarray]]
-    ) -> Dict[str, ndarray]:
+        self, local_data: Mapping[str, float | ndarray]
+    ) -> dict[str, ndarray]:
         """Convert the output data from scilab to GEMSEO.
 
         Args:
