@@ -20,10 +20,11 @@ from typing import Mapping
 
 from gemseo.core.data_processor import DataProcessor
 from gemseo.core.discipline import MDODiscipline
-from gemseo_scilab.py_scilab import ScilabFunction
-from gemseo_scilab.py_scilab import ScilabPackage
 from numpy import array
 from numpy import ndarray
+
+from gemseo_scilab.py_scilab import ScilabFunction
+from gemseo_scilab.py_scilab import ScilabPackage
 
 LOGGER = logging.getLogger(__name__)
 
