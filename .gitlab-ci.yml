@@ -86,6 +86,11 @@ style:
     paths:
       # For the coverage stage.
       - $COVERAGE_FILE
+  rules:
+    # Use the latest release of gemseo on the master branch.
+    - if: '$CI_COMMIT_REF_NAME == "master"'
+      variables:
+        GEMSEO_PIP_REQ_SPEC: gemseo
 
 # Common settings for windows tests jobs.
 .tests-windows:
