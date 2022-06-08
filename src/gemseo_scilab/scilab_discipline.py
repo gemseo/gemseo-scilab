@@ -63,8 +63,8 @@ class ScilabDiscipline(MDODiscipline):
 
         self._scilab_function = self.__scilab_package.functions[function_name]
 
-        self.input_grammar.initialize_from_base_dict(self.__base_input_data)
-        self.output_grammar.initialize_from_base_dict(self.__base_output_data)
+        self.input_grammar.update_from_data(self.__base_input_data)
+        self.output_grammar.update_from_data(self.__base_output_data)
         self.data_processor = ScilabDataProcessor(self._scilab_function)
 
     def _run(self) -> None:
