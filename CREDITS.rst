@@ -14,14 +14,14 @@ GEMSEO-SCILAB depends on software with compatible licenses that are listed below
 `gemseo <https://gemseo.org>`_
     BSD 3-Clause
 
+`Python <http://python.org/>`_
+    Python Software License
+
 `scilab <https://scilab.org>`_
     GNU GPL v2.0
 
 `scilab2py <https://github.com/blink1073/scilab2py>`_
     MIT
-
-`Python <http://python.org/>`_
-    Python Software License
 
 External application
 --------------------
@@ -55,7 +55,7 @@ training or example purposes.
 `pytest-xdist <https://github.com/pytest-dev/pytest-xdist>`_
     MIT
 
-`python-reorder-import <https://github.com/asottile/reorder_python_imports>`_
+`reorder-python-imports <https://github.com/asottile/reorder_python_imports>`_
     MIT
 
 `setuptools <https://setuptools.readthedocs.io/>`_
