@@ -19,6 +19,8 @@ import logging
 import re
 from glob import glob
 from pathlib import Path
+from typing import Any
+from typing import Callable
 from typing import Sequence
 
 from numpy import ndarray
@@ -29,6 +31,12 @@ LOGGER = logging.getLogger(__name__)
 
 class ScilabFunction:
     """A scilab function."""
+
+    _f_pointer: Callable | None
+    _fun_def: str
+    name: str
+    args: Sequence[str]
+    outs: Sequence[str]
 
     def __init__(
         self,
@@ -53,7 +61,7 @@ class ScilabFunction:
 
         self.__init_from_def()
 
-    def __call__(self, *args, **kwargs) -> dict[str, float | ndarray]:
+    def __call__(self, *args: Any, **kwargs: Any) -> dict[str, float | ndarray]:
         """Call the scilab function."""
         return self._f_pointer(*args, **kwargs)
 
@@ -62,12 +70,12 @@ class ScilabFunction:
         exec(self._fun_def)
         self._f_pointer = locals()[self.name]
 
-    def __getstate__(self):
+    def __getstate__(self) -> dict[str, Any]:
         out_dict = self.__dict__.copy()
         del out_dict["_f_pointer"]
         return out_dict
 
-    def __setstate__(self, state):
+    def __setstate__(self, state: dict[str, Any]) -> None:
         self.__dict__.update(state)
         self._f_pointer = None
         self.__init_from_def()
