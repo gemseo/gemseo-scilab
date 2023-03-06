@@ -10,9 +10,9 @@ certifi==2022.12.7
     # via requests
 charset-normalizer==3.0.1
     # via requests
-covdefaults==2.2.2
+covdefaults==2.3.0
     # via gemseo-scilab (setup.py)
-coverage[toml]==7.2.0
+coverage[toml]==7.2.1
     # via
     #   covdefaults
     #   pytest-cov
@@ -76,7 +76,7 @@ pyparsing==3.0.9
     # via
     #   matplotlib
     #   packaging
-pytest==7.2.1
+pytest==7.2.2
     # via
     #   gemseo-scilab (setup.py)
     #   pytest-cov
