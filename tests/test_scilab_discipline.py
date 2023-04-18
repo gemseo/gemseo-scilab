@@ -95,7 +95,7 @@ def test_pickle(tmp_wd):
     """
     disc = ScilabDiscipline("dummy_func1", DIRNAME)
     outf = "outf.pck"
-    disc.serialize(outf)
+    disc.to_pickle(outf)
     inputs = {"b": array([1.0])}
     out_ref = disc.execute(inputs)
 

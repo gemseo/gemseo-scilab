@@ -16,7 +16,9 @@
 from __future__ import annotations
 
 import logging
+from copy import copy
 from typing import Mapping
+from typing import MutableMapping
 
 from gemseo.core.data_processor import DataProcessor
 from gemseo.core.discipline import MDODiscipline
@@ -48,11 +50,6 @@ class ScilabDiscipline(MDODiscipline):
             ValueError: If the function is not in any of the files of
                 the `script_dir_path`.
         """
-        super().__init__(
-            name=function_name,
-            auto_detect_grammar_files=False,
-            grammar_type=MDODiscipline.JSON_GRAMMAR_TYPE,
-        )
         self.__scilab_package = ScilabPackage(script_dir_path)
 
         if function_name not in self.__scilab_package.functions:
@@ -63,8 +60,14 @@ class ScilabDiscipline(MDODiscipline):
 
         self._scilab_function = self.__scilab_package.functions[function_name]
 
-        self.input_grammar.update_from_data(self.__base_input_data)
-        self.output_grammar.update_from_data(self.__base_output_data)
+        super().__init__(
+            name=function_name,
+            auto_detect_grammar_files=False,
+            grammar_type=MDODiscipline.GrammarType.JSON,
+        )
+
+        self.input_grammar.update_from_names(self._scilab_function.args)
+        self.output_grammar.update_from_names(self._scilab_function.outs)
         self.data_processor = ScilabDataProcessor(self._scilab_function)
 
     def _run(self) -> None:
@@ -89,28 +92,6 @@ class ScilabDiscipline(MDODiscipline):
             for out_n, out_v in zip(out_names, output_data):
                 self.store_local_data(**{out_n: out_v})
 
-    @property
-    def __base_input_data(self) -> dict[str, float | ndarray]:
-        """The data to initialize the inputs."""
-        def_data = [0.1]
-        return {k: def_data for k in self._scilab_function.args}
-
-    @property
-    def __base_output_data(self) -> dict[str, float | ndarray]:
-        """The data to initialize the outputs."""
-        def_data = [0.1]
-        return {k: def_data for k in self._scilab_function.outs}
-
-    def get_attributes_to_serialize(self) -> list[str]:
-        """Define the attributes to be serialized.
-
-        Returns:
-            The attributes names.
-        """
-        attrs = super().get_attributes_to_serialize()
-        attrs.append("_scilab_function")
-        return attrs
-
 
 class ScilabDataProcessor(DataProcessor):
     """A scilab function data processor."""
@@ -125,8 +106,8 @@ class ScilabDataProcessor(DataProcessor):
         self._scilab_function = scilab_function
 
     def pre_process_data(
-        self, input_data: Mapping[str, ndarray]
-    ) -> dict[str, float | ndarray]:
+        self, input_data: MutableMapping[str, ndarray]
+    ) -> Mapping[str, ndarray]:
         """Convert the input from GEMSEO to scilab.
 
         Args:
@@ -135,7 +116,7 @@ class ScilabDataProcessor(DataProcessor):
         Returns:
             The data to be passed to scilab.
         """
-        processed_data = input_data.copy()
+        processed_data = copy(input_data)
         for data_name in self._scilab_function.args:
             processed_data[data_name] = processed_data[data_name]
         return processed_data
