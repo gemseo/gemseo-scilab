@@ -18,7 +18,6 @@ from __future__ import annotations
 import logging
 import pickle
 from pathlib import Path
-from typing import Dict
 from typing import Mapping
 
 import pytest
@@ -35,9 +34,9 @@ DUMMY_FUNCS = ["dummy_func1", "dummy_func2", "dummy_func3", "dummy_func4"]
 
 
 def exec_disc(
-    fname,  # type: str
-    in_data,  # type: Mapping[str, ndarray]
-):  # type: (...) -> Dict[str, ndarray]
+    fname: str,
+    in_data: Mapping[str, ndarray],
+) -> dict[str, ndarray]:
     """Create and execute a scilab discipline.
 
     Args:
@@ -96,7 +95,7 @@ def test_pickle(tmp_wd):
     """
     disc = ScilabDiscipline("dummy_func1", DIRNAME)
     outf = "outf.pck"
-    disc.serialize(outf)
+    disc.to_pickle(outf)
     inputs = {"b": array([1.0])}
     out_ref = disc.execute(inputs)
 

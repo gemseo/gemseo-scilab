@@ -17,8 +17,10 @@ from __future__ import annotations
 
 import logging
 import re
-from glob import glob
 from pathlib import Path
+from typing import Any
+from typing import Callable
+from typing import Final
 from typing import Sequence
 
 from numpy import ndarray
@@ -29,6 +31,12 @@ LOGGER = logging.getLogger(__name__)
 
 class ScilabFunction:
     """A scilab function."""
+
+    _f_pointer: Callable | None
+    _fun_def: str
+    name: str
+    args: Sequence[str]
+    outs: Sequence[str]
 
     def __init__(
         self,
@@ -53,8 +61,9 @@ class ScilabFunction:
 
         self.__init_from_def()
 
-    def __call__(self, *args, **kwargs) -> dict[str, float | ndarray]:
-        """Call the scilab function."""
+    def __call__(  # noqa: D102
+        self, *args: Any, **kwargs: Any
+    ) -> dict[str, float | ndarray]:
         return self._f_pointer(*args, **kwargs)
 
     def __init_from_def(self) -> None:
@@ -62,12 +71,12 @@ class ScilabFunction:
         exec(self._fun_def)
         self._f_pointer = locals()[self.name]
 
-    def __getstate__(self):
+    def __getstate__(self) -> dict[str, Any]:
         out_dict = self.__dict__.copy()
         del out_dict["_f_pointer"]
         return out_dict
 
-    def __setstate__(self, state):
+    def __setstate__(self, state: dict[str, Any]) -> None:
         self.__dict__.update(state)
         self._f_pointer = None
         self.__init_from_def()
@@ -80,32 +89,32 @@ class ScilabPackage:
     functions from them.
     """
 
-    RE_OUTS = re.compile(r"\[([^$].*?)]")
-    RE_FUNC = re.compile(r"=([^$].*?)\(")
-    RE_ARGS = re.compile(r"\(([^$].*?)\)")
+    RE_OUTS: Final[re.Pattern] = re.compile(r"\[([^$].*?)]")
+    RE_FUNC: Final[re.Pattern] = re.compile(r"=([^$].*?)\(")
+    RE_ARGS: Final[re.Pattern] = re.compile(r"\(([^$].*?)\)")
 
-    def __init__(self, script_dir_path: str) -> None:
+    def __init__(self, script_dir_path: str | Path) -> None:
         """Constructor.
 
         Args:
-            script_dir_path : The path to the directory to scan for .sci files.
+            script_dir_path: The path to the directory to scan for .sci files.
 
         Raises:
             FileNotFoundError: If the `script_dir_path` does not exist.
         """
-        if not Path(script_dir_path).exists():
+        script_dir_path = Path(script_dir_path)
+        if not script_dir_path.is_dir():
             raise FileNotFoundError(
                 f"Script directory for Scilab sources: {script_dir_path}"
                 " does not exist."
             )
 
         # scilab.timeout = 10
-        LOGGER.info("Use scilab script directory: %s", script_dir_path)
+        LOGGER.info("Using the scilab script directory: %s", script_dir_path)
 
-        self.__script_dir_path = script_dir_path
         scilab.getd(str(script_dir_path))
         self.functions = {}
-        self.__scan_funcs()
+        self.__scan_funcs(script_dir_path)
 
     def __scan_onef(self, line: str) -> None:
         """Scan a function in a sci file to parse its arguments, outputs and name.
@@ -160,13 +169,13 @@ def {fname}({args_form}):
 """
         self.functions[fname] = ScilabFunction(fun_def, fname, fargs, fouts)
 
-    def __scan_funcs(self) -> None:
+    def __scan_funcs(self, script_dir_path: Path) -> None:
         """Scan all functions in the directory.
 
         Raises:
             ValueError: If an interface cannot be generated for a function.
         """
-        for script_f in glob(str(Path(self.__script_dir_path) / "*.sci")):
+        for script_f in script_dir_path.glob("*.sci"):
             LOGGER.info("Found script file: %s", script_f)
 
             with open(script_f) as script:
