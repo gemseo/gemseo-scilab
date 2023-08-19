@@ -3,3 +3,4 @@ include:
 
 variables:
   TEST_DOCKER_IMAGE: registry.gitlab.com/gemseo/dev/gemseo-scilab/multi-python-scilab
+  TOX_EXE: tox4
