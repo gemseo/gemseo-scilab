@@ -75,5 +75,8 @@ ffibuilder.set_source(
     include_dirs=[SCILAB_INCLUDE_DIR],
     library_dirs=[SCILAB_LIBRARY_DIR],
     libraries=["scilab-cli", "scicall_scilab"],
-    extra_link_args=[f"-Wl,-rpath={SCILAB_LIBRARY_DIR}"],
+    extra_link_args=[
+        f"-Wl,-rpath={SCILAB_LIBRARY_DIR}",
+        "-Wl,-rpath={str(Path(SCILAB_LIBRARY_DIR).parent/'thirdparty')}",
+    ],
 )
