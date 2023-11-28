@@ -81,7 +81,7 @@ class ScilabDiscipline(MDODiscipline):
         try:
             output_data = self._scilab_function(**input_data)
         except BaseException:
-            LOGGER.error("Discipline: %s execution failed", self.name)
+            LOGGER.exception("Discipline: %s execution failed", self.name)
             raise
 
         out_names = self._scilab_function.outs
