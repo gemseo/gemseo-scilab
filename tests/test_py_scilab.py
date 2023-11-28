@@ -18,6 +18,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
+
 from gemseo_scilab.py_scilab import ScilabPackage
 
 DIRNAME = Path(__file__).parent / "sci"
@@ -25,7 +26,7 @@ DUMMY_FUNCS = ["dummy_func1", "dummy_func2"]
 
 
 @pytest.mark.parametrize(
-    "folder,expected_exception,expected_error_message",
+    ("folder", "expected_exception", "expected_error_message"),
     [
         (
             "toto",

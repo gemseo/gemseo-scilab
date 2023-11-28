@@ -18,13 +18,16 @@ from __future__ import annotations
 import logging
 import re
 from pathlib import Path
+from typing import TYPE_CHECKING
 from typing import Any
 from typing import Callable
 from typing import Final
 from typing import Sequence
 
-from numpy import ndarray
 from scilab2py import scilab
+
+if TYPE_CHECKING:
+    from numpy import ndarray
 
 LOGGER = logging.getLogger(__name__)
 
@@ -178,7 +181,7 @@ def {fname}({args_form}):
         for script_f in script_dir_path.glob("*.sci"):
             LOGGER.info("Found script file: %s", script_f)
 
-            with open(script_f) as script:
+            with Path(script_f).open() as script:
                 for line in script.readlines():
                     if not line.strip().startswith("function"):
                         continue
@@ -186,7 +189,9 @@ def {fname}({args_form}):
                     try:
                         self.__scan_onef(line)
                     except ValueError:
-                        LOGGER.error("Cannot generate interface for function %s", line)
+                        LOGGER.exception(
+                            "Cannot generate interface for function %s", line
+                        )
                         raise
 
     def __str__(self) -> str:
