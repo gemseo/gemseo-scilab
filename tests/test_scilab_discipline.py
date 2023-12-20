@@ -19,7 +19,7 @@ from __future__ import annotations
 import logging
 import pickle
 from pathlib import Path
-from typing import Mapping
+from typing import TYPE_CHECKING
 
 import pytest
 from numpy import array
@@ -28,6 +28,9 @@ from scilab2py import Scilab2PyError
 
 from gemseo_scilab.py_scilab import ScilabPackage
 from gemseo_scilab.scilab_discipline import ScilabDiscipline
+
+if TYPE_CHECKING:
+    from collections.abc import Mapping
 
 DIRNAME = Path(__file__).parent / "sci/dummy_func"
 

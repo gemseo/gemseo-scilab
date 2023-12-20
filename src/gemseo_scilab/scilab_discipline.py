@@ -18,8 +18,7 @@ from __future__ import annotations
 
 import logging
 from copy import copy
-from typing import Mapping
-from typing import MutableMapping
+from typing import TYPE_CHECKING
 
 from gemseo.core.data_processor import DataProcessor
 from gemseo.core.discipline import MDODiscipline
@@ -28,6 +27,10 @@ from numpy import ndarray
 
 from gemseo_scilab.py_scilab import ScilabFunction
 from gemseo_scilab.py_scilab import ScilabPackage
+
+if TYPE_CHECKING:
+    from collections.abc import Mapping
+    from collections.abc import MutableMapping
 
 LOGGER = logging.getLogger(__name__)
 
