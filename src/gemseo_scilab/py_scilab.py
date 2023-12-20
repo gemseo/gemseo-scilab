@@ -23,11 +23,12 @@ from typing import TYPE_CHECKING
 from typing import Any
 from typing import Callable
 from typing import Final
-from typing import Sequence
 
 from scilab2py import scilab
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     from numpy import ndarray
 
 LOGGER = logging.getLogger(__name__)
