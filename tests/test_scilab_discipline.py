@@ -13,19 +13,24 @@
 # along with this program; if not, write to the Free Software Foundation,
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 """Tests for the scilab discipline."""
+
 from __future__ import annotations
 
 import logging
 import pickle
 from pathlib import Path
-from typing import Mapping
+from typing import TYPE_CHECKING
 
 import pytest
-from gemseo_scilab.py_scilab import ScilabPackage
-from gemseo_scilab.scilab_discipline import ScilabDiscipline
 from numpy import array
 from numpy import ndarray
+from scilab2py import Scilab2PyError
 
+from gemseo_scilab.py_scilab import ScilabPackage
+from gemseo_scilab.scilab_discipline import ScilabDiscipline
+
+if TYPE_CHECKING:
+    from collections.abc import Mapping
 
 DIRNAME = Path(__file__).parent / "sci/dummy_func"
 
@@ -99,7 +104,8 @@ def test_pickle(tmp_wd):
     inputs = {"b": array([1.0])}
     out_ref = disc.execute(inputs)
 
-    disc_load = pickle.load(open(outf, "rb"))
+    with open(outf, "rb") as f:
+        disc_load = pickle.load(f)
     out = disc_load.execute(inputs)
     assert (out["a"] == out_ref["a"]).all()
 
@@ -116,9 +122,10 @@ def test_func_fail_exec(caplog):
 
     data_dict = {"b": array([0.0])}
 
-    with pytest.raises(BaseException):
+    with pytest.raises(Scilab2PyError):
         exec_disc(fname, data_dict)
-        assert caplog.text == f"Discipline: {fname} execution failed"
+
+    assert f"Discipline: {fname} execution failed" in caplog.text
 
 
 def test_matrix_output():

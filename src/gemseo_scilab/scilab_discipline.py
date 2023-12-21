@@ -13,12 +13,12 @@
 # along with this program; if not, write to the Free Software Foundation,
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 """Scilab discipline."""
+
 from __future__ import annotations
 
 import logging
 from copy import copy
-from typing import Mapping
-from typing import MutableMapping
+from typing import TYPE_CHECKING
 
 from gemseo.core.data_processor import DataProcessor
 from gemseo.core.discipline import MDODiscipline
@@ -27,6 +27,10 @@ from numpy import ndarray
 
 from gemseo_scilab.py_scilab import ScilabFunction
 from gemseo_scilab.py_scilab import ScilabPackage
+
+if TYPE_CHECKING:
+    from collections.abc import Mapping
+    from collections.abc import MutableMapping
 
 LOGGER = logging.getLogger(__name__)
 
@@ -81,7 +85,7 @@ class ScilabDiscipline(MDODiscipline):
         try:
             output_data = self._scilab_function(**input_data)
         except BaseException:
-            LOGGER.error("Discipline: %s execution failed", self.name)
+            LOGGER.exception("Discipline: %s execution failed", self.name)
             raise
 
         out_names = self._scilab_function.outs

@@ -1,0 +1,13 @@
+# Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
+_commit: f9462b9
+_src_path: https://gitlab.com/gemseo/dev/copier-gemseo
+author_email: contact@gemseo.org
+author_name: François Gallard
+gemseo_min_version: '5'
+package_is_a_gemseo_plugin: true
+project_is_open_source: true
+project_name: gemseo-scilab
+project_name_suffix: scilab
+project_slug: gemseo_scilab
+short_description: GEMSEO plugin to create disciplines from scilab source code.
+use_gemseo_develop: true
