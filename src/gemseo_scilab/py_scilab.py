@@ -184,7 +184,7 @@ def {fname}({args_form}):
             LOGGER.info("Found script file: %s", script_f)
 
             with Path(script_f).open() as script:
-                for line in script.readlines():
+                for line in script:
                     if not line.strip().startswith("function"):
                         continue
 
