@@ -36,7 +36,7 @@ fastjsonschema==2.19.1
     # via gemseo
 fonttools==4.49.0
     # via matplotlib
-gemseo[all]==5.2.1.dev153+g6460a0db
+gemseo[all]==5.2.1.dev157+g138bbb18
     # via gemseo-scilab (pyproject.toml)
 genson==1.2.2
     # via gemseo
@@ -58,7 +58,7 @@ markupsafe==2.1.5
     # via jinja2
 matplotlib==3.8.2
     # via gemseo
-mpmath==1.3.0
+mpmath==1.4.0a0
     # via sympy
 networkx==3.2.1
     # via gemseo
