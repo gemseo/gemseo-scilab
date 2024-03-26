@@ -57,10 +57,11 @@ class ScilabDiscipline(MDODiscipline):
         self.__scilab_package = ScilabPackage(script_dir_path)
 
         if function_name not in self.__scilab_package.functions:
-            raise ValueError(
+            msg = (
                 f"The function named {function_name}"
                 f" is not in script_dir {script_dir_path}"
             )
+            raise ValueError(msg)
 
         self._scilab_function = self.__scilab_package.functions[function_name]
 

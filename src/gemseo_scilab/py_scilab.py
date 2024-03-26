@@ -109,10 +109,11 @@ class ScilabPackage:
         """
         script_dir_path = Path(script_dir_path)
         if not script_dir_path.is_dir():
-            raise FileNotFoundError(
+            msg = (
                 f"Script directory for Scilab sources: {script_dir_path}"
                 " does not exist."
             )
+            raise FileNotFoundError(msg)
 
         # scilab.timeout = 10
         LOGGER.info("Using the scilab script directory: %s", script_dir_path)
@@ -134,14 +135,16 @@ class ScilabPackage:
         line = line.replace(" ", "")
         match_groups = self.RE_FUNC.search(line)
         if match_groups is None:
-            raise ValueError(f"No function name found in {line}")
+            msg = f"No function name found in {line}"
+            raise ValueError(msg)
 
         fname = match_groups.group(0).strip()[1:-1].strip()
         LOGGER.debug("Detected function: %s", fname)
 
         match_groups = self.RE_OUTS.search(line)
         if match_groups is None:
-            raise ValueError(f"Function {fname} has no outputs.")
+            msg = f"Function {fname} has no outputs."
+            raise ValueError(msg)
 
         argstr = match_groups.group(0).strip()
         argstr = argstr.replace("[", "").replace("]", "")
@@ -152,7 +155,8 @@ class ScilabPackage:
 
         match_groups = self.RE_ARGS.search(line)
         if match_groups is None:
-            raise ValueError(f"Function {fname} has no arguments.")
+            msg = f"Function {fname} has no arguments."
+            raise ValueError(msg)
 
         argstr = match_groups.group(0).strip()[1:-1].strip()
         args = argstr.split(",")
