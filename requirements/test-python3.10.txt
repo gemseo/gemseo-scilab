@@ -103,7 +103,7 @@ pytest==7.4.4
     #   pytest-cov
     #   pytest-xdist
 pytest-cov==5.0.0
-pytest-xdist==3.5.0
+pytest-xdist==3.6.0
 python-dateutil==2.9.0.post0
     # via
     #   matplotlib
