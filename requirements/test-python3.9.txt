@@ -88,7 +88,7 @@ pillow==10.2.0
     #   matplotlib
 plotly==5.20.0
     # via gemseo
-pluggy==1.4.0
+pluggy==1.5.0
     # via pytest
 psutil==5.9.8
     # via openturns
@@ -105,7 +105,7 @@ pytest==7.4.4
     #   pytest-cov
     #   pytest-xdist
 pytest-cov==5.0.0
-pytest-xdist==3.6.0
+pytest-xdist==3.5.0
 python-dateutil==2.9.0.post0
     # via
     #   matplotlib
