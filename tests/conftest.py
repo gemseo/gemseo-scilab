@@ -22,7 +22,7 @@ from pathlib import Path
 import pytest
 
 
-@pytest.fixture()
+@pytest.fixture
 def tmp_wd(tmp_path):
     """Fixture to move into a temporary directory forth and back.
 
