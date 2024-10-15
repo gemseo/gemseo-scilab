@@ -20,10 +20,7 @@ GEMSEO plugin to create disciplines from scilab source code.
 
 ## Installation
 
-Install the latest stable version with `pip install gemseo-scilab`.
-
-Install the development version with
-`pip install gemseo-scilab@git+https://gitlab.com/gemseo/dev/gemseo-scilab.git@develop`.
+Install the latest version with `pip install gemseo-scilab`.
 
 See [pip](https://pip.pypa.io/en/stable/getting-started/) for more information.
 
