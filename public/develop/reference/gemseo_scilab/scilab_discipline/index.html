@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../../../images/favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.39">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.40">
     
     
       
@@ -853,6 +853,11 @@
 
 
 
+
+
+
+
+
   <div class="doc doc-children">
 
 
@@ -876,7 +881,7 @@
 
     <div class="doc doc-contents ">
             <p class="doc doc-class-bases">
-              Bases: <code><a class="autorefs autorefs-external" title="gemseo.core.data_processor.DataProcessor" href="https://gemseo.readthedocs.io/en/stable/_modules/gemseo.core.data_processor.html#gemseo.core.data_processor.DataProcessor">DataProcessor</a></code></p>
+              Bases: <code><span title="gemseo.core.discipline.data_processor.DataProcessor">DataProcessor</span></code></p>
 
 
         <p>A scilab function data processor.</p>
@@ -887,7 +892,7 @@
 <p><span class="doc-section-title">Parameters:</span></p>
     <ul>
         <li class="doc-section-item field-body">
-          <b><code>scilab_function</code></b>
+            <b><code>scilab_function</code></b>
               (<code><a class="autorefs autorefs-internal" title="gemseo_scilab.py_scilab.ScilabFunction" href="../py_scilab/#gemseo_scilab.py_scilab.ScilabFunction">ScilabFunction</a></code>)
           –
           <div class="doc-md-description">
@@ -896,16 +901,21 @@
         </li>
     </ul>
 
+
+
+
+
+
                   <details class="quote">
                     <summary>Source code in <code>src/gemseo_scilab/scilab_discipline.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">104</span>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
 <span class="normal">105</span>
 <span class="normal">106</span>
-<span class="normal">107</span>
-<span class="normal">108</span>
-<span class="normal">109</span>
-<span class="normal">110</span>
-<span class="normal">111</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scilab_function</span><span class="p">:</span> <span class="n">ScilabFunction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">107</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scilab_function</span><span class="p">:</span> <span class="n">ScilabFunction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
 
 <span class="sd">    Args:</span>
@@ -949,7 +959,7 @@
 <p><span class="doc-section-title">Parameters:</span></p>
     <ul>
         <li class="doc-section-item field-body">
-          <b><code>local_data</code></b>
+            <b><code>local_data</code></b>
           –
           <div class="doc-md-description">
             <p>The data obtained after executing scilab.</p>
@@ -971,7 +981,11 @@
 
             <details class="quote">
               <summary>Source code in <code>src/gemseo_scilab/scilab_discipline.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">129</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
 <span class="normal">130</span>
 <span class="normal">131</span>
 <span class="normal">132</span>
@@ -987,11 +1001,7 @@
 <span class="normal">142</span>
 <span class="normal">143</span>
 <span class="normal">144</span>
-<span class="normal">145</span>
-<span class="normal">146</span>
-<span class="normal">147</span>
-<span class="normal">148</span>
-<span class="normal">149</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">post_process_data</span><span class="p">(</span>
+<span class="normal">145</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">post_process_data</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">local_data</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">ndarray</span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert the output data from scilab to GEMSEO.</span>
@@ -1039,7 +1049,7 @@
 <p><span class="doc-section-title">Parameters:</span></p>
     <ul>
         <li class="doc-section-item field-body">
-          <b><code>input_data</code></b>
+            <b><code>input_data</code></b>
               (<code><a class="autorefs autorefs-external" title="collections.abc.MutableMapping" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.MutableMapping">MutableMapping</a>[<a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a>, <a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a>]</code>)
           –
           <div class="doc-md-description">
@@ -1062,7 +1072,11 @@
 
             <details class="quote">
               <summary>Source code in <code>src/gemseo_scilab/scilab_discipline.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">113</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
 <span class="normal">114</span>
 <span class="normal">115</span>
 <span class="normal">116</span>
@@ -1072,11 +1086,7 @@
 <span class="normal">120</span>
 <span class="normal">121</span>
 <span class="normal">122</span>
-<span class="normal">123</span>
-<span class="normal">124</span>
-<span class="normal">125</span>
-<span class="normal">126</span>
-<span class="normal">127</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">pre_process_data</span><span class="p">(</span>
+<span class="normal">123</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">pre_process_data</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">input_data</span><span class="p">:</span> <span class="n">MutableMapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ndarray</span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert the input from GEMSEO to scilab.</span>
@@ -1119,7 +1129,7 @@
 
     <div class="doc doc-contents ">
             <p class="doc doc-class-bases">
-              Bases: <code><a class="autorefs autorefs-external" title="gemseo.core.discipline.MDODiscipline" href="https://gemseo.readthedocs.io/en/stable/_modules/gemseo.core.discipline.html#gemseo.core.discipline.MDODiscipline">MDODiscipline</a></code></p>
+              Bases: <code><span title="gemseo.core.discipline.discipline.Discipline">Discipline</span></code></p>
 
 
         <p>Base wrapper for OCCAM problem discipline wrappers and SimpleGrammar.</p>
@@ -1130,7 +1140,7 @@
 <p><span class="doc-section-title">Parameters:</span></p>
     <ul>
         <li class="doc-section-item field-body">
-          <b><code>function_name</code></b>
+            <b><code>function_name</code></b>
               (<code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></code>)
           –
           <div class="doc-md-description">
@@ -1139,7 +1149,7 @@ generate the discipline from.</p>
           </div>
         </li>
         <li class="doc-section-item field-body">
-          <b><code>script_dir_path</code></b>
+            <b><code>script_dir_path</code></b>
               (<code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></code>)
           –
           <div class="doc-md-description">
@@ -1160,6 +1170,11 @@ the <code>script_dir_path</code>.</p>
           </div>
         </li>
     </ul>
+
+
+
+
+
 
                   <details class="quote">
                     <summary>Source code in <code>src/gemseo_scilab/scilab_discipline.py</code></summary>
@@ -1194,11 +1209,7 @@ the <code>script_dir_path</code>.</p>
 <span class="normal">69</span>
 <span class="normal">70</span>
 <span class="normal">71</span>
-<span class="normal">72</span>
-<span class="normal">73</span>
-<span class="normal">74</span>
-<span class="normal">75</span>
-<span class="normal">76</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+<span class="normal">72</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">function_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">script_dir_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -1225,15 +1236,11 @@ the <code>script_dir_path</code>.</p>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">_scilab_function</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__scilab_package</span><span class="o">.</span><span class="n">functions</span><span class="p">[</span><span class="n">function_name</span><span class="p">]</span>
 
-    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-        <span class="n">name</span><span class="o">=</span><span class="n">function_name</span><span class="p">,</span>
-        <span class="n">auto_detect_grammar_files</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">grammar_type</span><span class="o">=</span><span class="n">MDODiscipline</span><span class="o">.</span><span class="n">GrammarType</span><span class="o">.</span><span class="n">JSON</span><span class="p">,</span>
-    <span class="p">)</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">function_name</span><span class="p">)</span>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">input_grammar</span><span class="o">.</span><span class="n">update_from_names</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_scilab_function</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">output_grammar</span><span class="o">.</span><span class="n">update_from_names</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_scilab_function</span><span class="o">.</span><span class="n">outs</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">data_processor</span> <span class="o">=</span> <span class="n">ScilabDataProcessor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_scilab_function</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">data_processor</span> <span class="o">=</span> <span class="n">ScilabDataProcessor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_scilab_function</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
                   </details>
 
