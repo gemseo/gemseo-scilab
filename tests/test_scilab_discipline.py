@@ -22,6 +22,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 import pytest
+from gemseo import to_pickle
 from numpy import array
 from numpy import ndarray
 from scilab2py import Scilab2PyError
@@ -100,7 +101,7 @@ def test_pickle(tmp_wd):
     """
     disc = ScilabDiscipline("dummy_func1", DIRNAME)
     outf = "outf.pck"
-    disc.to_pickle(outf)
+    to_pickle(disc, outf)
     inputs = {"b": array([1.0])}
     out_ref = disc.execute(inputs)
 

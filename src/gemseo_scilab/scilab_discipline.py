@@ -20,8 +20,8 @@ import logging
 from copy import copy
 from typing import TYPE_CHECKING
 
-from gemseo.core.data_processor import DataProcessor
-from gemseo.core.discipline import MDODiscipline
+from gemseo.core.discipline.data_processor import DataProcessor
+from gemseo.core.discipline.discipline import Discipline
 from numpy import array
 from numpy import ndarray
 
@@ -35,7 +35,7 @@ if TYPE_CHECKING:
 LOGGER = logging.getLogger(__name__)
 
 
-class ScilabDiscipline(MDODiscipline):
+class ScilabDiscipline(Discipline):
     """Base wrapper for OCCAM problem discipline wrappers and SimpleGrammar."""
 
     def __init__(
@@ -65,15 +65,11 @@ class ScilabDiscipline(MDODiscipline):
 
         self._scilab_function = self.__scilab_package.functions[function_name]
 
-        super().__init__(
-            name=function_name,
-            auto_detect_grammar_files=False,
-            grammar_type=MDODiscipline.GrammarType.JSON,
-        )
+        super().__init__(name=function_name)
 
         self.input_grammar.update_from_names(self._scilab_function.args)
         self.output_grammar.update_from_names(self._scilab_function.outs)
-        self.data_processor = ScilabDataProcessor(self._scilab_function)
+        self.io.data_processor = ScilabDataProcessor(self._scilab_function)
 
     def _run(self) -> None:
         """Run the discipline.
@@ -92,10 +88,10 @@ class ScilabDiscipline(MDODiscipline):
         out_names = self._scilab_function.outs
 
         if len(out_names) == 1:
-            self.store_local_data(**{out_names[0]: output_data})
+            self.io.update_output_data({out_names[0]: output_data})
         else:
             for out_n, out_v in zip(out_names, output_data):
-                self.store_local_data(**{out_n: out_v})
+                self.io.update_output_data({out_n: out_v})
 
 
 class ScilabDataProcessor(DataProcessor):
