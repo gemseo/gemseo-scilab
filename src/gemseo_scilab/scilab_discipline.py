@@ -32,6 +32,8 @@ if TYPE_CHECKING:
     from collections.abc import Mapping
     from collections.abc import MutableMapping
 
+    from gemseo.typing import StrKeyMapping
+
 LOGGER = logging.getLogger(__name__)
 
 
@@ -71,7 +73,7 @@ class ScilabDiscipline(Discipline):
         self.output_grammar.update_from_names(self._scilab_function.outs)
         self.io.data_processor = ScilabDataProcessor(self._scilab_function)
 
-    def _run(self) -> None:
+    def _run(self, input_data: StrKeyMapping) -> None:
         """Run the discipline.
 
         Raises:
