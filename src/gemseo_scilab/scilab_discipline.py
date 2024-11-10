@@ -20,8 +20,8 @@ import logging
 from copy import copy
 from typing import TYPE_CHECKING
 
-from gemseo.core.data_processor import DataProcessor
-from gemseo.core.discipline import MDODiscipline
+from gemseo.core.discipline.data_processor import DataProcessor
+from gemseo.core.discipline.discipline import Discipline
 from numpy import array
 from numpy import ndarray
 
@@ -32,10 +32,12 @@ if TYPE_CHECKING:
     from collections.abc import Mapping
     from collections.abc import MutableMapping
 
+    from gemseo.typing import StrKeyMapping
+
 LOGGER = logging.getLogger(__name__)
 
 
-class ScilabDiscipline(MDODiscipline):
+class ScilabDiscipline(Discipline):
     """Base wrapper for OCCAM problem discipline wrappers and SimpleGrammar."""
 
     def __init__(
@@ -57,24 +59,21 @@ class ScilabDiscipline(MDODiscipline):
         self.__scilab_package = ScilabPackage(script_dir_path)
 
         if function_name not in self.__scilab_package.functions:
-            raise ValueError(
+            msg = (
                 f"The function named {function_name}"
                 f" is not in script_dir {script_dir_path}"
             )
+            raise ValueError(msg)
 
         self._scilab_function = self.__scilab_package.functions[function_name]
 
-        super().__init__(
-            name=function_name,
-            auto_detect_grammar_files=False,
-            grammar_type=MDODiscipline.GrammarType.JSON,
-        )
+        super().__init__(name=function_name)
 
         self.input_grammar.update_from_names(self._scilab_function.args)
         self.output_grammar.update_from_names(self._scilab_function.outs)
-        self.data_processor = ScilabDataProcessor(self._scilab_function)
+        self.io.data_processor = ScilabDataProcessor(self._scilab_function)
 
-    def _run(self) -> None:
+    def _run(self, input_data: StrKeyMapping) -> None:
         """Run the discipline.
 
         Raises:
@@ -91,10 +90,10 @@ class ScilabDiscipline(MDODiscipline):
         out_names = self._scilab_function.outs
 
         if len(out_names) == 1:
-            self.store_local_data(**{out_names[0]: output_data})
+            self.io.update_output_data({out_names[0]: output_data})
         else:
             for out_n, out_v in zip(out_names, output_data):
-                self.store_local_data(**{out_n: out_v})
+                self.io.update_output_data({out_n: out_v})
 
 
 class ScilabDataProcessor(DataProcessor):

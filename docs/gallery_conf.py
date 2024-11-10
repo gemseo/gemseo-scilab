@@ -12,25 +12,22 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program; if not, write to the Free Software Foundation,
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-"""Test helpers."""
-
 from __future__ import annotations
 
-import os
 from pathlib import Path
 
-import pytest
+file_dir_path = Path(__file__).parent
+example_dir_name = "examples"
+gallery_dir = file_dir_path / "generated" / example_dir_name
+examples_dir = file_dir_path / example_dir_name
+examples_subdirs = [
+    subdir.name
+    for subdir in examples_dir.iterdir()
+    if (examples_dir / subdir).is_dir()
+    and (examples_dir / subdir / "README.md").is_file()
+]
 
-
-@pytest.fixture
-def tmp_wd(tmp_path):
-    """Fixture to move into a temporary directory forth and back.
-
-    Return the path to the temporary directory.
-    """
-    prev_cwd = Path.cwd()
-    os.chdir(str(tmp_path))
-    try:
-        yield tmp_path
-    finally:
-        os.chdir(str(prev_cwd))
+conf = {
+    f"{example_dir_name}_dirs": [examples_dir / subdir for subdir in examples_subdirs],
+    "gallery_dirs": [gallery_dir / subdir for subdir in examples_subdirs],
+}
