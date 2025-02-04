@@ -17,7 +17,6 @@
 from __future__ import annotations
 
 import logging
-from copy import copy
 from typing import TYPE_CHECKING
 
 from gemseo.core.discipline.data_processor import DataProcessor
@@ -29,9 +28,7 @@ from gemseo_scilab.py_scilab import ScilabFunction
 from gemseo_scilab.py_scilab import ScilabPackage
 
 if TYPE_CHECKING:
-    from collections.abc import Mapping
-    from collections.abc import MutableMapping
-
+    from gemseo.typing import MutableStrKeyMapping
     from gemseo.typing import StrKeyMapping
 
 LOGGER = logging.getLogger(__name__)
@@ -69,18 +66,16 @@ class ScilabDiscipline(Discipline):
 
         super().__init__(name=function_name)
 
-        self.input_grammar.update_from_names(self._scilab_function.args)
-        self.output_grammar.update_from_names(self._scilab_function.outs)
+        self.io.input_grammar.update_from_names(self._scilab_function.args)
+        self.io.output_grammar.update_from_names(self._scilab_function.outs)
         self.io.data_processor = ScilabDataProcessor(self._scilab_function)
 
-    def _run(self, input_data: StrKeyMapping) -> None:
+    def _run(self, input_data: StrKeyMapping) -> StrKeyMapping | None:
         """Run the discipline.
 
         Raises:
             BaseException: If the discipline execution fails.
         """
-        input_data = self.get_input_data()
-
         try:
             output_data = self._scilab_function(**input_data)
         except BaseException:
@@ -90,10 +85,8 @@ class ScilabDiscipline(Discipline):
         out_names = self._scilab_function.outs
 
         if len(out_names) == 1:
-            self.io.update_output_data({out_names[0]: output_data})
-        else:
-            for out_n, out_v in zip(out_names, output_data):
-                self.io.update_output_data({out_n: out_v})
+            return {out_names[0]: output_data}
+        return dict(zip(out_names, output_data))
 
 
 class ScilabDataProcessor(DataProcessor):
@@ -106,37 +99,14 @@ class ScilabDataProcessor(DataProcessor):
             scilab_function: The scilab function.
         """
         super().__init__()
-        self._scilab_function = scilab_function
+        self.__scilab_function = scilab_function
 
-    def pre_process_data(
-        self, input_data: MutableMapping[str, ndarray]
-    ) -> Mapping[str, ndarray]:
-        """Convert the input from GEMSEO to scilab.
+    def pre_process_data(self, data: StrKeyMapping) -> MutableStrKeyMapping:  # noqa: D102
+        return dict(data)
 
-        Args:
-            input_data: The input data.
-
-        Returns:
-            The data to be passed to scilab.
-        """
-        processed_data = copy(input_data)
-        for data_name in self._scilab_function.args:
-            processed_data[data_name] = processed_data[data_name]
-        return processed_data
-
-    def post_process_data(
-        self, local_data: Mapping[str, float | ndarray]
-    ) -> dict[str, ndarray]:
-        """Convert the output data from scilab to GEMSEO.
-
-        Args:
-            local_data : The data obtained after executing scilab.
-
-        Returns:
-            The processed data to be given to GEMSEO.
-        """
-        processed_data = dict(local_data)
-        for data_name in self._scilab_function.outs:
+    def post_process_data(self, data: StrKeyMapping) -> MutableStrKeyMapping:  # noqa: D102
+        processed_data = dict(data)
+        for data_name in self.__scilab_function.outs:
             val = processed_data[data_name]
 
             if isinstance(val, ndarray):

@@ -57,7 +57,7 @@ file = "README.md"
 content-type = "text/markdown"
 
 [project.entry-points]
-gemseo_plugins = { gemseo-scilab = "gemseo_scilab"}
+gemseo_plugins = { gemseo-scilab = "gemseo_scilab" }
 
 [build-system]
 requires = [
