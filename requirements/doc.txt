@@ -2,13 +2,13 @@
 #    uv pip compile --extra doc --constraint requirements/test-constraints.in -o requirements/doc.txt --python-version 3.9 pyproject.toml
 annotated-types==0.7.0
     # via pydantic
-babel==2.16.0
+babel==2.17.0
     # via mkdocs-material
-black==24.10.0
+black==25.1.0
     # via gemseo-scilab (pyproject.toml)
 bracex==2.5.post1
     # via wcmatch
-certifi==2024.12.14
+certifi==2025.1.31
     # via requests
 charset-normalizer==3.4.1
     # via requests
@@ -16,7 +16,6 @@ click==8.1.8
     # via
     #   black
     #   mkdocs
-    #   mkdocstrings
 colorama==0.4.6
     # via
     #   griffe
@@ -35,9 +34,9 @@ eval-type-backport==0.2.0
     # via gemseo
 fastjsonschema==2.20.0
     # via gemseo
-fonttools==4.55.7
+fonttools==4.55.8
     # via matplotlib
-gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@40ded75da1aadb2ee5ab0a4e890ed6994ac2f35b
+gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@a9cc39d4dfed1042341c438df46c38c419dfa699
     # via
     #   -c requirements/test-constraints.in
     #   gemseo-scilab (pyproject.toml)
@@ -47,7 +46,7 @@ ghp-import==2.1.0
     # via mkdocs
 graphviz==0.20.3
     # via gemseo
-griffe==1.5.5
+griffe==1.5.6
     # via
     #   griffe-inherited-docstrings
     #   mkdocstrings-python
@@ -128,12 +127,14 @@ mkdocs-gallery==0.10.4
 mkdocs-gen-files==0.5.0
     # via gemseo-scilab (pyproject.toml)
 mkdocs-get-deps==0.2.0
-    # via mkdocs
+    # via
+    #   mkdocs
+    #   mkdocstrings
 mkdocs-include-markdown-plugin==7.1.2
     # via gemseo-scilab (pyproject.toml)
 mkdocs-literate-nav==0.6.1
     # via gemseo-scilab (pyproject.toml)
-mkdocs-material==9.5.50
+mkdocs-material==9.6.2
     # via
     #   gemseo-scilab (pyproject.toml)
     #   mkdocs-gallery
@@ -141,11 +142,11 @@ mkdocs-material-extensions==1.3.1
     # via mkdocs-material
 mkdocs-section-index==0.3.9
     # via gemseo-scilab (pyproject.toml)
-mkdocstrings==0.27.0
+mkdocstrings==0.28.0
     # via
     #   gemseo-scilab (pyproject.toml)
     #   mkdocstrings-python
-mkdocstrings-python==1.13.0
+mkdocstrings-python==1.14.3
     # via mkdocstrings
 mpmath==1.3.0
     # via sympy
@@ -196,7 +197,6 @@ platformdirs==4.3.6
     # via
     #   black
     #   mkdocs-get-deps
-    #   mkdocstrings
 plotly==5.24.0
     # via gemseo
 prettytable==3.12.0
@@ -217,7 +217,7 @@ pygments==2.19.1
     #   pygments-ansi-color
 pygments-ansi-color==0.3.0
     # via markdown-exec
-pymdown-extensions==10.14.2
+pymdown-extensions==10.14.3
     # via
     #   markdown-exec
     #   mkdocs-material
@@ -233,7 +233,7 @@ python-dateutil==2.9.0.post0
     #   ghp-import
     #   matplotlib
     #   pandas
-pytz==2024.2
+pytz==2025.1
     # via pandas
 pyxdsm==2.3.0
     # via gemseo
@@ -294,6 +294,7 @@ typing-extensions==4.12.2
     #   black
     #   gemseo
     #   mkdocstrings
+    #   mkdocstrings-python
     #   pydantic
     #   pydantic-core
 tzdata==2025.1
