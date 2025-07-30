@@ -18,7 +18,7 @@ click==8.2.1
     # via check-wheel-contents
 cryptography==45.0.5
     # via secretstorage
-docutils==0.21.2
+docutils==0.22
     # via readme-renderer
 id==1.5.0
     # via twine
