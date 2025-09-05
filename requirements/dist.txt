@@ -78,7 +78,7 @@ rich==14.1.0
     # via twine
 secretstorage==3.3.3
     # via keyring
-twine==6.1.0
+twine==6.2.0
     # via -r requirements/dist.in
 typing-extensions==4.15.0
     # via
