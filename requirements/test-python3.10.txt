@@ -116,7 +116,7 @@ pytest==8.4.2
     #   gemseo-scilab (pyproject.toml)
     #   pytest-cov
     #   pytest-xdist
-pytest-cov==6.2.1
+pytest-cov==6.3.0
     # via gemseo-scilab (pyproject.toml)
 pytest-xdist==3.8.0
     # via gemseo-scilab (pyproject.toml)
