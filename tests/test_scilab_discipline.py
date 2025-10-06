@@ -24,7 +24,6 @@ from typing import TYPE_CHECKING
 import pytest
 from gemseo import to_pickle
 from numpy import array
-from numpy import ndarray
 from scilab2py import Scilab2PyError
 
 from gemseo_scilab.py_scilab import ScilabPackage
@@ -32,6 +31,8 @@ from gemseo_scilab.scilab_discipline import ScilabDiscipline
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
+
+    from numpy import ndarray
 
 DIRNAME = Path(__file__).parent / "sci/dummy_func"
 
@@ -77,7 +78,9 @@ def test_dummy_funcs():
             assert output_value == disc_outs[output_name]
 
         else:
-            for output_name, output_value in zip(output_names, scilab_outputs):
+            for output_name, output_value in zip(
+                output_names, scilab_outputs, strict=False
+            ):
                 assert output_value == disc_outs[output_name]
 
 
