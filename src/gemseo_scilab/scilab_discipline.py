@@ -24,12 +24,13 @@ from gemseo.core.discipline.discipline import Discipline
 from numpy import array
 from numpy import ndarray
 
-from gemseo_scilab.py_scilab import ScilabFunction
 from gemseo_scilab.py_scilab import ScilabPackage
 
 if TYPE_CHECKING:
     from gemseo.typing import MutableStrKeyMapping
     from gemseo.typing import StrKeyMapping
+
+    from gemseo_scilab.py_scilab import ScilabFunction
 
 LOGGER = logging.getLogger(__name__)
 
@@ -86,7 +87,7 @@ class ScilabDiscipline(Discipline):
 
         if len(out_names) == 1:
             return {out_names[0]: output_data}
-        return dict(zip(out_names, output_data))
+        return dict(zip(out_names, output_data, strict=False))
 
 
 class ScilabDataProcessor(DataProcessor):
