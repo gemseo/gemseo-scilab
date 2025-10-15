@@ -1,10 +1,9 @@
 include:
-  - remote: "https://gitlab.com/gemseo/dev/ci-includes/-/raw/main/plugin.yml"
+  - remote: "https://gitlab.com/gemseo/dev/ci-includes/-/raw/4/main.yml"
 
 variables:
-  TEST_DOCKER_IMAGE: registry.gitlab.com/gemseo/dev/gemseo-scilab/multi-python-scilab:5.5.2
+  TEST_IMAGE: registry.gitlab.com/gemseo/dev/gemseo-scilab/multi-python-scilab:5.5.2
 
-.test-env-names:
-  - py39-coverage
-  - py310-coverage
-  - py311-coverage
+.test-all-py-versions:
+  - $__PY_VERSION_MIN
+  - 311

@@ -21,12 +21,12 @@ import re
 from pathlib import Path
 from typing import TYPE_CHECKING
 from typing import Any
-from typing import Callable
 from typing import Final
 
 from scilab2py import scilab
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
     from collections.abc import Sequence
 
     from numpy import ndarray
