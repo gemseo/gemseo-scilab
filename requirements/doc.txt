@@ -199,7 +199,7 @@ pillow==12.1.0
     # via
     #   gemseo
     #   matplotlib
-platformdirs==4.5.1
+platformdirs==4.7.0
     # via
     #   black
     #   mkdocs-get-deps
