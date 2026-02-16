@@ -199,7 +199,7 @@ pillow==12.1.0
     # via
     #   gemseo
     #   matplotlib
-platformdirs==4.9.1
+platformdirs==4.9.2
     # via
     #   black
     #   mkdocs-get-deps
@@ -227,7 +227,7 @@ pygments==2.19.2
     #   pygments-ansi-color
 pygments-ansi-color==0.3.0
     # via markdown-exec
-pymdown-extensions==10.20.1
+pymdown-extensions==10.21
     # via
     #   markdown-exec
     #   mkdocs-material
