@@ -4,7 +4,7 @@ annotated-types==0.7.0
     # via pydantic
 babel==2.18.0
     # via mkdocs-material
-backrefs==6.1
+backrefs==6.2
     # via mkdocs-material
 black==26.1.0
     # via gemseo-scilab (pyproject.toml:doc)
