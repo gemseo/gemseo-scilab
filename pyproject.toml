@@ -21,7 +21,7 @@ dynamic = ["version"]
 requires-python = ">=3.9, <3.12"
 dependencies = [
     "gemseo[all] >=6.3,<7",
-    "numpy <1.24",
+    "numpy <1.27",
     "scilab2py ==0.6.2",
 ]
 
